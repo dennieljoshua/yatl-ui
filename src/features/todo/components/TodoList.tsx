@@ -30,9 +30,8 @@ export default function TodoList({ items }: TodoListProps) {
       isDone: false,
     };
 
-    console.log("creating", todo);
-
     dispatch(postTodo(todo));
+    setTodoName("");
   }
 
   function onNameChange(_ev: unknown, value?: string) {
