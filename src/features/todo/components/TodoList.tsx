@@ -3,11 +3,12 @@ import {
   FocusZone,
   FocusZoneDirection,
   List,
+  PrimaryButton,
   TextField,
 } from "@fluentui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { fetchTodos, todosSelector } from "../todoSlice";
+import { fetchTodos, postTodo, todosSelector } from "../todoSlice";
 import { Todo } from "../types";
 
 interface TodoListProps {
@@ -17,13 +18,27 @@ interface TodoListProps {
 export default function TodoList({ items }: TodoListProps) {
   const todos = useAppSelector(todosSelector);
   const dispatch = useAppDispatch();
+  const [todoName, setTodoName] = useState("");
 
   useEffect(() => {
     dispatch(fetchTodos());
   }, []);
 
-  function onAddTodo(_ev: unknown, value?: string) {
-    console.log(value);
+  function onAddTodo(_ev: unknown) {
+    const todo: Todo = {
+      name: todoName,
+      isDone: false,
+    };
+
+    console.log("creating", todo);
+
+    dispatch(postTodo(todo));
+  }
+
+  function onNameChange(_ev: unknown, value?: string) {
+    if (value) {
+      setTodoName(value);
+    }
   }
 
   const onRenderCell = (item?: Todo, index?: number) => (
@@ -35,7 +50,10 @@ export default function TodoList({ items }: TodoListProps) {
 
   return (
     <FocusZone direction={FocusZoneDirection.vertical}>
-      <TextField label="Add todo" onChange={onAddTodo} />
+      <div>
+        <TextField placeholder="Add a new Todo" onChange={onNameChange} />
+        <PrimaryButton onClick={onAddTodo}>Add</PrimaryButton>
+      </div>
       <List items={todos} onRenderCell={onRenderCell} />
     </FocusZone>
   );
