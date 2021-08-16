@@ -2,6 +2,8 @@ import {
   Checkbox,
   FocusZone,
   FocusZoneDirection,
+  Icon,
+  IconButton,
   List,
   PrimaryButton,
   TextField,
@@ -9,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+  deleteTodo,
   fetchTodos,
   loadingSelector,
   markTodoAsDone,
@@ -55,6 +58,12 @@ export default function TodoList({ items }: TodoListProps) {
     };
   }
 
+  function onDeleteClicked(todo: Todo) {
+    return () => {
+      dispatch(deleteTodo(todo));
+    };
+  }
+
   const onRenderCell = (item?: Todo, index?: number) => (
     <div className="TodoListItem" data-is-focusable={true} key={item?.id}>
       <Checkbox
@@ -64,6 +73,12 @@ export default function TodoList({ items }: TodoListProps) {
       />
       <div className="TodoListItem-Text">
         {item?.isDone ? <del>{item?.name}</del> : <span>{item?.name}</span>}
+      </div>
+      <div className="TodoListItem-Buttons">
+        <IconButton
+          iconProps={{ iconName: "Delete" }}
+          onClick={onDeleteClicked(item!)}
+        />
       </div>
     </div>
   );

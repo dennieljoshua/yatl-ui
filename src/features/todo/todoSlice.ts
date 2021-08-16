@@ -49,6 +49,17 @@ export const markTodoAsDone = createAsyncThunk(
   }
 );
 
+export const deleteTodo = createAsyncThunk(
+  "todo/deleteTodo",
+  async (todo: Todo) => {
+    const response = await fetch(`http://localhost:3001/api/todo/${todo.id}`, {
+      method: "DELETE",
+    });
+
+    return await response.json();
+  }
+);
+
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -95,6 +106,15 @@ export const todoSlice = createSlice({
         // Move todo to the end of the list
         const item = state.todos.splice(index, 1);
         state.todos.push(item[0]);
+        state.loading = false;
+      })
+      .addCase(deleteTodo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteTodo.fulfilled, (state, action) => {
+        state.todos = state.todos.filter(
+          (todo) => todo.id !== +action.payload.id
+        );
         state.loading = false;
       });
   },

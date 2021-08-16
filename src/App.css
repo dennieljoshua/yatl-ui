@@ -21,3 +21,7 @@
 .TodoListItemText {
   font-weight: bold;
 }
+
+.TodoListItem-Buttons {
+  margin-left: auto;
+}
