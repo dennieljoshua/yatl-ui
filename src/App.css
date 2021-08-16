@@ -18,10 +18,20 @@
   padding-left: 8px;
 }
 
-.TodoListItemText {
-  font-weight: bold;
+.TodoListItem-Text {
+  /* font-weight: bold; */
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.TodoListItem-Text__Editor {
+  width: 100%;
+  margin-right: 8px;
 }
 
 .TodoListItem-Buttons {
+  display: flex;
+  flex-direction: row;
   margin-left: auto;
 }

@@ -1,9 +1,6 @@
 import {
-  Checkbox,
   FocusZone,
   FocusZoneDirection,
-  Icon,
-  IconButton,
   List,
   PrimaryButton,
   TextField,
@@ -19,6 +16,7 @@ import {
   todosSelector,
 } from "../todoSlice";
 import { Todo } from "../types";
+import { TodoListItem } from "./TodoListItem";
 
 interface TodoListProps {
   items: Array<Todo>;
@@ -32,7 +30,7 @@ export default function TodoList({ items }: TodoListProps) {
 
   useEffect(() => {
     dispatch(fetchTodos());
-  }, []);
+  }, [dispatch]);
 
   function onAddTodo(_ev: unknown) {
     const todo: Todo = {
@@ -64,24 +62,15 @@ export default function TodoList({ items }: TodoListProps) {
     };
   }
 
-  const onRenderCell = (item?: Todo, index?: number) => (
-    <div className="TodoListItem" data-is-focusable={true} key={item?.id}>
-      <Checkbox
-        checked={item?.isDone}
-        onChange={onTodoDone(item!)}
-        disabled={item?.isDone}
+  const onRenderCell = (item?: Todo, index?: number) => {
+    return (
+      <TodoListItem
+        item={item!}
+        onTodoDone={onTodoDone(item!)}
+        onDeleteClicked={onDeleteClicked(item!)}
       />
-      <div className="TodoListItem-Text">
-        {item?.isDone ? <del>{item?.name}</del> : <span>{item?.name}</span>}
-      </div>
-      <div className="TodoListItem-Buttons">
-        <IconButton
-          iconProps={{ iconName: "Delete" }}
-          onClick={onDeleteClicked(item!)}
-        />
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <FocusZone direction={FocusZoneDirection.vertical}>

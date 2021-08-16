@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, Dispatch } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { Todo } from "./types";
 
@@ -60,25 +60,25 @@ export const deleteTodo = createAsyncThunk(
   }
 );
 
+export const updateTodo = createAsyncThunk(
+  "todo/updateTodo",
+  async (todo: Todo) => {
+    const response = await fetch(`http://localhost:3001/api/todo/${todo.id}`, {
+      method: "PUT",
+      body: JSON.stringify(todo),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await response.json();
+  }
+);
+
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
-  reducers: {
-    getTodos: (state) => {
-      state.loading = true;
-    },
-    getTodosSuccess: (state, { payload }) => {
-      state.todos = payload;
-      state.loading = false;
-    },
-    createTodo: (state) => {
-      state.loading = true;
-    },
-    createTodoSuccess: (state, { payload }) => {
-      state.todos.push(payload);
-      state.loading = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchTodos.pending, (state) => {
@@ -116,13 +116,19 @@ export const todoSlice = createSlice({
           (todo) => todo.id !== +action.payload.id
         );
         state.loading = false;
+      })
+      .addCase(updateTodo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateTodo.fulfilled, (state, action) => {
+        const index = state.todos.findIndex(
+          (todo) => todo.id === +action.payload.id
+        );
+        state.todos[index] = action.payload;
+        state.loading = false;
       });
   },
 });
-
-// Actions
-export const { getTodos, getTodosSuccess, createTodo, createTodoSuccess } =
-  todoSlice.actions;
 
 // Selectors
 export const todosSelector = (state: RootState) => state.todo.todos;
