@@ -8,8 +8,16 @@
   font-size: 3rem;
 }
 
-/* .TodoList {
-  background-color: #fad369;
-  border-radius: 15%;
-  height: 65vh;
-} */
+.TodoListItem {
+  display: flex;
+  flex-direction: row;
+  margin-top: 8px;
+  background-color: #fff;
+  height: 35px;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.TodoListItemText {
+  font-weight: bold;
+}
