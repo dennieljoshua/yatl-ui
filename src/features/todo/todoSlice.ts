@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { Todo } from "./types";
+import { getBasePath } from "./utils/api";
 
 export interface TodoState {
   todos: Array<Todo>;
@@ -13,14 +14,14 @@ const initialState: TodoState = {
 };
 
 export const fetchTodos = createAsyncThunk("todo/getTodos", async () => {
-  const response = await fetch("http://localhost:3001/api/todo");
+  const response = await fetch(`${getBasePath()}/api/todo`);
   return await response.json();
 });
 
 export const postTodo = createAsyncThunk(
   "todo/createTodo",
   async (todo: Todo) => {
-    const response = await fetch("http://localhost:3001/api/todo", {
+    const response = await fetch(`${getBasePath()}/api/todo`, {
       method: "POST",
       body: JSON.stringify(todo),
       headers: {
@@ -35,7 +36,7 @@ export const postTodo = createAsyncThunk(
 export const markTodoAsDone = createAsyncThunk(
   "todo/markAsDone",
   async (todo: Todo) => {
-    const response = await fetch(`http://localhost:3001/api/todo/${todo.id}`, {
+    const response = await fetch(`${getBasePath()}/api/todo/${todo.id}`, {
       method: "PUT",
       body: JSON.stringify({
         isDone: true,
@@ -52,7 +53,7 @@ export const markTodoAsDone = createAsyncThunk(
 export const deleteTodo = createAsyncThunk(
   "todo/deleteTodo",
   async (todo: Todo) => {
-    const response = await fetch(`http://localhost:3001/api/todo/${todo.id}`, {
+    const response = await fetch(`${getBasePath()}/api/todo/${todo.id}`, {
       method: "DELETE",
     });
 
@@ -63,7 +64,7 @@ export const deleteTodo = createAsyncThunk(
 export const updateTodo = createAsyncThunk(
   "todo/updateTodo",
   async (todo: Todo) => {
-    const response = await fetch(`http://localhost:3001/api/todo/${todo.id}`, {
+    const response = await fetch(`${getBasePath()}/api/todo/${todo.id}`, {
       method: "PUT",
       body: JSON.stringify(todo),
       headers: {
