@@ -32,6 +32,23 @@ export const postTodo = createAsyncThunk(
   }
 );
 
+export const markTodoAsDone = createAsyncThunk(
+  "todo/markAsDone",
+  async (todo: Todo) => {
+    const response = await fetch(`http://localhost:3001/api/todo/${todo.id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        isDone: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await response.json();
+  }
+);
+
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -66,6 +83,19 @@ export const todoSlice = createSlice({
       .addCase(postTodo.fulfilled, (state, action) => {
         state.todos.push(action.payload);
         state.loading = false;
+      })
+      .addCase(markTodoAsDone.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(markTodoAsDone.fulfilled, (state, action) => {
+        const index = state.todos.findIndex(
+          (todo) => todo.id === +action.payload.id
+        );
+        state.todos[index].isDone = action.payload.isDone;
+        // Move todo to the end of the list
+        const item = state.todos.splice(index, 1);
+        state.todos.push(item[0]);
+        state.loading = false;
       });
   },
 });
@@ -76,5 +106,6 @@ export const { getTodos, getTodosSuccess, createTodo, createTodoSuccess } =
 
 // Selectors
 export const todosSelector = (state: RootState) => state.todo.todos;
+export const loadingSelector = (state: RootState) => state.todo.loading;
 
 export default todoSlice.reducer;
