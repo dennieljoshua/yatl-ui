@@ -74,8 +74,9 @@ export default function TodoList({ items }: TodoListProps) {
 
   return (
     <FocusZone direction={FocusZoneDirection.vertical}>
-      <div>
+      <div className="TodoList__AddItem">
         <TextField
+          className="TodoList__TextField"
           placeholder="Add a new Todo"
           onChange={onNameChange}
           value={todoName}

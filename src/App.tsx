@@ -6,7 +6,7 @@ function App() {
   initializeIcons();
   return (
     <div className="App">
-      <h1 className="Title">YATL</h1>
+      <h1 className="Title">Yet Another Todo List</h1>
       <TodoList items={[]} />
     </div>
   );
